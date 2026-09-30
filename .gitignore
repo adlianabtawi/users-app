@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+
+# Miljövariabler (API-nyckeln)
+.env
+.env.local
+
+# Lokal testdata från API:t
+users.json
+
+# Node och bygge
+node_modules/
+dist/
