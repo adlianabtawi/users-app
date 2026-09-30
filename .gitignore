@@ -1,13 +1,28 @@
-# macOS
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
 .DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.san
+*.sw?
 
-# Miljövariabler (API-nyckeln)
+# API-nyckeln och lokal testdata
 .env
-.env.local
-
-# Lokal testdata från API:t
 users.json
-
-# Node och bygge
-node_modules/
-dist/

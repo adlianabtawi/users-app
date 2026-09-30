@@ -50,36 +50,37 @@ Kontrollerat 30 september: svaret har formen nedan.
 ## Datamodell (TypeScript)
 
 ```ts
+// types/user.ts
 export interface Address {
-  street: string;
-  city: string;
-  zipCode: string;
+  street: string
+  city: string
+  zipCode: string
 }
 
 export interface Profile {
-  name: string;
-  email: string;
-  address: Address;
+  name: string
+  email: string
+  address: Address
 }
 
 export interface NotificationSettings {
-  email: boolean;
-  push: boolean;
+  email: boolean
+  push: boolean
 }
 
 export interface Settings {
-  theme: 'light' | 'dark';
-  notifications: NotificationSettings;
+  theme: "light" | "dark"
+  notifications: NotificationSettings
 }
 
-export type Role = 'user' | 'admin' | 'editor' | 'support';
+export type Role = "user" | "admin" | "editor" | "support"
 
 export interface User {
-  id: number;
-  username: string;
-  profile: Profile;
-  settings: Settings;
-  roles: Role[];
+  id: number
+  username: string
+  profile: Profile
+  settings: Settings
+  roles: Role[]
 }
 ```
 
@@ -87,7 +88,7 @@ export interface User {
 
 ## Cachestrategi: att hålla sig under 100 anrop
 
-Hela appen använder **en** query: `['users']`. Profilsidan hämtar inte själv. Den läser samma cache och plockar ut rätt användare med `select`. Att byta mellan lista och profil kostar alltså noll anrop.
+Hela appen använder **en** query: `["users"]`. Profilsidan hämtar inte själv. Den läser samma cache och plockar ut rätt användare med `select`. Att byta mellan lista och profil kostar alltså noll anrop.
 
 | Inställning | Värde | Varför |
 |---|---|---|
@@ -116,13 +117,14 @@ Det är god vana, men det gör inte nyckeln helt hemlig. Allt i en frontend syns
 
 ## Komponentstruktur
 
-Platt med avsikt. Tre mappar och en handfull filer i roten. En ny mapp skapas först när den behövs.
+Kursens standardmappar (kapitel 7), men bara de som behövs och utan undermappar. `context/` behövs inte, eftersom appen inte har något globalt klient-state. En mapp skapas när dess första fil skapas.
 
 ```
 src/
-├── api.ts                  fetchUsers(): anrop med header, kastar fel vid !ok
-├── types.ts                interfaces ovan
-├── queryClient.ts          QueryClient med inställningarna ovan
+├── api/
+│   └── users.ts            getUsers(): anrop med header, kastar fel vid !res.ok
+├── types/
+│   └── user.ts             interfaces ovan
 ├── hooks/
 │   └── useUsers.ts         useUsers() och useUser(id)
 ├── components/
@@ -136,12 +138,25 @@ src/
 │   ├── UserDetailPage.tsx
 │   └── NotFoundPage.tsx
 ├── App.tsx                 routes
-└── main.tsx                QueryClientProvider + Router
+└── main.tsx                QueryClient + QueryClientProvider + Router
 ```
 
-Separation of concerns i korthet: `api.ts` vet hur man pratar med servern, `hooks/` vet hur datan cachas, `pages/` vet vilken data en sida behöver, `components/` vet bara hur saker ska se ut och får allt via typade props.
+Separation of concerns i korthet: `api/` vet hur man pratar med servern, `hooks/` vet hur datan cachas, `pages/` vet vilken data en sida behöver och hämtar den, `components/` vet bara hur saker ska se ut och får allt via typade props.
 
-Varför den här nivån: uppdelningen i ansvar är det som bedöms, inte antalet mappar. En komponent bryts ut när den används på fler än ett ställe eller när en sida blir svår att läsa. Sök och filter får en egen `UserFilters.tsx` först om den bonusen blir av.
+En komponent bryts ut när den används på fler än ett ställe eller när en sida blir svår att läsa. Sök och filter får en egen `UserFilters.tsx` först om den bonusen blir av.
+
+## Kodstil
+
+Samma stil som läraren och kursboken:
+
+- **Arrow-funktioner överallt**, även komponenter: `const UserCard = ({ user }: UserCardProps) => { … }`
+- **Komponenter:** en per fil, `export default` längst ner. **API-funktioner och hooks:** namngiven export, `export const getUsers = …`
+- **`interface`** för objekt och props, **`type`** bara för unioner (`Role`)
+- **Props-interfacet** heter som komponenten plus `Props`: `UserCardProps`
+- **`useQuery`:** `isLoading`, `isError` och `error`. Fetch-funktionen kastar vid `!res.ok` och fångar aldrig själv.
+- **Namn:** `handleX` för handlers, `onX` för funktions-props, `isX` för booleans, PascalCase för komponenter
+- **Format:** inga semikolon, som i kursens exempel. Prettier sköter resten, så att det blir konsekvent, och ESLint ska vara nöjd.
+- **Inga `console.log` kvar** vid inlämning, utom anropsräknaren i utvecklingsläge
 
 ## Tillstånd som ska synas i gränssnittet
 
@@ -165,9 +180,9 @@ En rad är en gren och en pull request.
 | Dag | Gren | Klart när |
 |---|---|---|
 | Ons 30 sep | `main`: första commit | README och planering pushade, `develop` skapad |
-| Tor 1 okt | `chore/vite-setup` | Vite + React + TS startar, ESLint, mappstruktur |
+| Ons 30 sep | `chore/vite-setup` | Vite + React + TS startar, exempelkoden borta, `.env.example` |
 | Tor 1 okt | `chore/pages-deploy` | Tom app live på GitHub Pages, 404-tricket fungerar |
-| Fre 2 okt | `feature/api-and-types` | Typer, `fetchUsers`, `queryClient`, persister, anropsräknare |
+| Fre 2 okt | `feature/api-and-types` | Typer, `getUsers`, `QueryClient` med cacheinställningar, persister, anropsräknare |
 | Fre 2 okt | `feature/routing-layout` | Alla routes, nav, layout, 404-sida |
 | Lör 3 okt | `feature/users-list` | Lista med kort och alla tre tillstånd |
 | Sön 4 okt | `feature/user-detail` | Profilsida via `select`, okänt id hanteras |
