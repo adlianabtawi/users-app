@@ -1,41 +1,75 @@
-# Users App
+# React + TypeScript + Vite
 
-En React-app som hämtar användare från ett externt REST-API och visar dem i en lista och på en profilsida. Projektuppgift i kursen React (30 yhp) vid Teknikhögskolan i Lund.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-**Live:** _kommer när första releasen är ute på GitHub Pages_
+Currently, two official plugins are available:
 
-## Teknik
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-- React + TypeScript (Vite)
-- TanStack Query (`useQuery`) för datahämtning och caching
-- React Router (`react-router-dom`) för navigering
-- GitHub Actions + GitHub Pages för publicering
+## React Compiler
 
-## Så jobbar vi med grenar
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-`main` är produktion. Det som ligger där är live och det är det som lämnas in. Ingen commitar direkt till `main` eller `develop`.
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 
 ```
-feature/...  ─┐
-fix/...      ─┼──► develop ──(release-PR)──► main ──► GitHub Pages
-chore/...    ─┘
+
+You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+
 ```
-
-| Gren | Syfte |
-|---|---|
-| `main` | Produktion. Uppdateras bara via release-PR från `develop`. |
-| `develop` | Integration. Här samlas färdiga features och testas tillsammans. |
-| `feature/<namn>` | Ny funktion, till exempel `feature/users-list`. |
-| `fix/<namn>` | Buggfix. |
-| `chore/<namn>` | Setup, config och verktyg. |
-| `docs/<namn>` | Dokumentation. |
-
-En gren gör en sak. Den mergeas till `develop` via pull request och tas sedan bort.
-
-## Kom igång
-
-_Fylls i när projektet är uppsatt med Vite._
-
-## Planering
-
-Sitemap, datamodell, komponentstruktur, cachestrategi och tidsplan finns i [docs/planering.md](docs/planering.md).
