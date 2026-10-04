@@ -7,3 +7,11 @@ export const useUsers = () => {
     queryFn: getUsers,
   })
 }
+
+export const useUser = (id: number) => {
+  return useQuery({
+    queryKey: ["users"],
+    queryFn: getUsers,
+    select: (users) => users.find((user) => user.id === id),
+  })
+}
