@@ -201,3 +201,18 @@ Viktigast: måndag kväll ska `main` vara en godkänd inlämning. Tisdag är bar
 - [ ] Testat i webbläsaren, även laddning och fel
 - [ ] Inga onödiga API-anrop (kolla räknaren)
 - [ ] PR:en går till `develop`, inte `main`
+
+## Utfall: så blev det (5 oktober)
+
+Planen ovan skrevs den 30 september, innan någon kod fanns. Det här ändrades under arbetet:
+
+| Planerat | Blev | Varför |
+|---|---|---|
+| `Layout` med `Outlet` | `Navbar` med `Link`, direkt ovanför `<Routes>` i `App` | Samma upplägg som i kursens övningar, och enklare att förklara. |
+| Startsida med statistik per roll | Enkel startsida med länk till listan | Bonus som ströks för att hinna med kraven. |
+| Sök och rollfilter i listan | Inte byggt | Bonus som ströks av samma skäl. |
+| Cache sparad i `localStorage` | Bara cache i minnet | Inställningarna i `QueryClient` räckte för att hålla anropen nere. |
+| `RoleBadge` direkt i kortet | `RoleList`, som döljer grundrollen `user` när personen har en annan roll | Regeln behövdes på två sidor och ligger nu på ett ställe. |
+| `404.html` som skickar vidare till `index.html` | `404.html` som är en kopia av `index.html` | Enklare, och React Router läser adressen själv. |
+
+Tidsplanen höll inte dag för dag. Projektet sattes upp 30 september till 2 oktober, och funktionskoden skrevs 4 och 5 oktober. Release v1.0 gick ändå ut den 5 oktober som planerat.
