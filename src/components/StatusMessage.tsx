@@ -6,7 +6,7 @@ interface StatusMessageProps {
 
 const StatusMessage = ({ variant, message, onRetry }: StatusMessageProps) => {
   return (
-    <div className={"status status-" + variant}>
+    <div className={"status status-" + variant} role={variant === "error" ? "alert" : "status"}>
       <p>{message}</p>
       {onRetry && <button onClick={onRetry}>Försök igen</button>}
     </div>
