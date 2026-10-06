@@ -41,6 +41,14 @@ nav a:hover {
   text-decoration: underline;
 }
 
+
+/* NavLink lägger själv klassen active på länken till sidan man står på */
+nav a.active {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
+
 /* Sidans innehåll */
 main {
   max-width: 62rem;
